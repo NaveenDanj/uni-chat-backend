@@ -42,6 +42,14 @@ module.exports = (sequelize, Sequelize) => {
             unique: true
         },
 
+        phone: {
+            type: Sequelize.STRING,
+            unique : true,
+            validate: {
+                len: [0, 10]
+            }
+        },
+
         password: {
             type: Sequelize.STRING,
             allowNull : false
