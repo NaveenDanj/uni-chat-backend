@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    res.json('SpringDB API');
+    res.json('UNI-CHAT API');
 });
 
 // add middleware to jobController
