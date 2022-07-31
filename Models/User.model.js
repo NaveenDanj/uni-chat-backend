@@ -17,7 +17,7 @@ module.exports = (sequelize, Sequelize) => {
             validate: {
                 len: [0, 50]
             },
-            allowNull: false
+            allowNull: true
         },
 
         about : {

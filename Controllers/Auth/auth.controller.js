@@ -2,10 +2,11 @@ const express = require('express');
 const db = require("../../Database");
 const router = express.Router();
 const Joi = require('../../Config/validater.config');
+const {generateToken} = require('../../Services/Jwt.service');
 
 router.post('/register' , async (req ,res) => {
 
-    const validator = Joi.validate(req.body, {
+    const validator = Joi.object({
         fullname: Joi.string().required(),
         phone: Joi.string().required(),
         email: Joi.string().email().required(),
@@ -14,7 +15,6 @@ router.post('/register' , async (req ,res) => {
 
     try{
         let data = await validator.validateAsync(req.body , {abortEarly: false});
-        // go ahead
 
         // check if user exists by email or phone
         let checkUser = await db.users.findOne({
@@ -27,6 +27,7 @@ router.post('/register' , async (req ,res) => {
         });
 
         if(checkUser){
+            console.log(checkUser)
             return res.status(400).json({error: 'User already exists'});
         }
 
@@ -39,13 +40,9 @@ router.post('/register' , async (req ,res) => {
         });
 
         // generate token
-        const token = null
+        const token = generateToken(data.email);
 
         // save token
-        await db.access_token.create({
-            user_id: user.id,
-            token: token
-        });
 
         // return user
         return res.status(200).json({
@@ -55,7 +52,9 @@ router.post('/register' , async (req ,res) => {
 
 
     }catch(err){
-        return res.status(400).send(err.details);
+        return res.status(400).json({
+            error: err.message
+        });
     }
 
 
