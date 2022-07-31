@@ -12,6 +12,7 @@ router.post('/register' , async (req ,res) => {
         phone: Joi.string().required(),
         email: Joi.string().email().required(),
         password: Joi.string().min(6).required(),
+        device_name: Joi.string().required(),
     });
 
     try{
@@ -45,6 +46,13 @@ router.post('/register' , async (req ,res) => {
 
         // generate token
         const token = generateToken(data.email);
+
+        // save token
+        await db.access_tokens.create({
+            token: token,
+            user_id: user.id,
+            device: data.device_name
+        });
 
         // return user
         return res.status(200).json({
