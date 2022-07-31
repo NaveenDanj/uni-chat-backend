@@ -3,6 +3,7 @@ const db = require("../../Database");
 const router = express.Router();
 const Joi = require('../../Config/validater.config');
 const {generateToken} = require('../../Services/Jwt.service');
+const {hashPasswod} = require('../../Services/hash.service');
 
 router.post('/register' , async (req ,res) => {
 
@@ -32,17 +33,18 @@ router.post('/register' , async (req ,res) => {
         }
 
         // create user
+
+        let hashed_password = await hashPasswod(data.password);
+
         let user = await db.users.create({
             fullname: data.fullname,
             phone: data.phone,
             email: data.email,
-            password: data.password,
+            password: hashed_password
         });
 
         // generate token
         const token = generateToken(data.email);
-
-        // save token
 
         // return user
         return res.status(200).json({

@@ -16,6 +16,7 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.users = require("../Models/User.model")(sequelize, Sequelize);
+db.access_tokens = require("../Models/AccessToken.model")(sequelize, Sequelize);
 // db.access_token = require("../Models/AccessToken.model")(sequelize, Sequelize);
 // db.workspaces = require("../Models/Workspace.model")(sequelize, Sequelize);
 // db.workspace_users = require("../Models/WorkspaceUser.model")(sequelize, Sequelize);
