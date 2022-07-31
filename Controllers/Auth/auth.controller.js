@@ -4,6 +4,7 @@ const router = express.Router();
 const Joi = require('../../Config/validater.config');
 const {generateToken , generateUserId} = require('../../Services/Jwt.service');
 const {hashPasswod , comparePassword} = require('../../Services/hash.service');
+const AuthRequired = require('../../Middlewares/AuthRequired.middleware');
 
 router.post('/register' , async (req ,res) => {
 
@@ -133,9 +134,15 @@ router.post('/login' , async (req , res) => {
         });
     }
 
+});
 
 
+router.get('/current-user' , AuthRequired() , async (req , res) => {
 
-})
+    return res.status(200).json({
+        user: req.user.user
+    });
+
+});
 
 module.exports = router;

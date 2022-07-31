@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const db = require("../Database");
 
-const AuthRequired = (userRole) => {
+const AuthRequired = () => {
 
     return async (req , res , next) => {
 
@@ -13,7 +13,7 @@ const AuthRequired = (userRole) => {
 
         try{
 
-            let checkExists = await db.access_token.findOne({
+            let checkExists = await db.access_tokens.findOne({
                 where: {
                     token: token
                 }
