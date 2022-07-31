@@ -7,6 +7,12 @@ module.exports = (sequelize, Sequelize) => {
             autoIncrement: true
         },
 
+        userId : {
+            type: Sequelize.STRING,
+            allowNull: false,
+            unique: true
+        },
+
         fullname: {
             type: Sequelize.STRING,
             allowNull: false
