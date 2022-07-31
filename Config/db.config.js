@@ -2,7 +2,7 @@ module.exports = {
     HOST: "localhost",
     USER: "root",
     PASSWORD: "",
-    DB: "springdb",
+    DB: "unichat",
     dialect: "mysql",
     pool: {
       max: 5,
