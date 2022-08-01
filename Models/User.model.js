@@ -61,6 +61,14 @@ module.exports = (sequelize, Sequelize) => {
             allowNull : false
         },
 
+        profile_image: {
+            type: Sequelize.STRING,
+            validate: {
+                len: [0, 1024]
+            },
+            allowNull: true
+        },
+
     });
     return User;
 };
