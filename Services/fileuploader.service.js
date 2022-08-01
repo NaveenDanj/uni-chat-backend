@@ -1,14 +1,13 @@
-const Uuid = require('uuid');
 
 module.exports = {
 
-    checkAllowedExtension(file , occassion){
+    uploadFile(file , occassion){
 
-        let allowedExtensions = [];
+        let filePath = null;
 
         switch(occassion){
             case 'profile-picture':
-                allowedExtensions = ['jpg' , 'jpeg' , 'png'];
+                filePath = `./uploads/profile-pictures/${file.name}`;
                 break;
             case 'cover-picture':
                 allowedExtensions = ['jpg' , 'jpeg' , 'png'];
@@ -24,21 +23,14 @@ module.exports = {
                 break;
         }
 
-        let fileExtension = file.name.split('.').pop();
-
-        if(allowedExtensions.includes(fileExtension)){
-            return true;
-        }else{
-            return false;
-        }
-
-
-    },
-
-    generateFileName(file){
-        let fileExtension = file.name.split('.').pop();
-        return Uuid.v4() + '.' + fileExtension;
+        return new Promise((resolve , reject) => {
+            file.mv(filePath , (err) => {
+                if(err){
+                    reject(err);
+                }
+                resolve(fileName);
+            });
+        });
     }
-
-
+   
 };
