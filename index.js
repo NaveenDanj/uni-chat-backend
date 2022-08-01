@@ -1,11 +1,17 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
 const cors = require('cors');
 const db = require('./Database');
 require('dotenv').config();
 
 const Api = require('./routes/api');
+
+// enable files upload
+app.use(fileUpload({
+    createParentPath: true
+}));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({

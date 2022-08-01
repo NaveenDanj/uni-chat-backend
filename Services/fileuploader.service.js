@@ -28,7 +28,7 @@ module.exports = {
                 if(err){
                     reject(err);
                 }
-                resolve(fileName);
+                resolve(filePath);
             });
         });
     }
