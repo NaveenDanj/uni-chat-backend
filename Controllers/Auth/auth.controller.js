@@ -145,4 +145,35 @@ router.get('/current-user' , AuthRequired() , async (req , res) => {
 
 });
 
+router.post('/logout' , AuthRequired() , async (req , res) => {
+
+    let user_token = req.headers.authorization;
+    
+    // check if token exists in the database
+    let check_token_exists = db.access_tokens.findOne({
+        where:{
+            token: user_token,
+            user_id: req.user.user.id
+        }
+    });
+
+    if(!check_token_exists){
+        return res.status(400).json({error: 'Invalid token'});
+    }
+
+    // delete token
+    await db.access_tokens.destroy({
+        where: {
+            token: user_token,
+            user_id: req.user.user.id
+        }
+    });
+
+    
+    return res.status(200).json({
+        message: 'Logged out successfully',
+    })
+
+});
+
 module.exports = router;
