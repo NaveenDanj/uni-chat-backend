@@ -1,23 +1,24 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const fileUpload = require('express-fileupload');
 const cors = require('cors');
 const db = require('./Database');
+const busboy = require('connect-busboy');
+var path = require('path');
+
 require('dotenv').config();
+
 
 const Api = require('./routes/api');
 
-// enable files upload
-app.use(fileUpload({
-    createParentPath: true
-}));
+app.use(busboy());
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-app.use(cors());
+app.use(express.static(path.join(__dirname, 'uploads')));
 
 // initialize database tables in sequelize
 db.sequelize.sync()

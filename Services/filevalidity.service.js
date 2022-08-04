@@ -24,7 +24,7 @@ module.exports = {
                 break;
         }
 
-        let fileExtension = file.name.split('.').pop();
+        let fileExtension = file.filename.split('.').pop();
 
         if(allowedExtensions.includes(fileExtension)){
             return true;
@@ -36,7 +36,7 @@ module.exports = {
     },
 
     generateFileName(file){
-        let fileExtension = file.name.split('.').pop();
+        let fileExtension = file.filename.split('.').pop();
         return Uuid.v4() + '.' + fileExtension;
     }
 
