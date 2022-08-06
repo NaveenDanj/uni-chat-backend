@@ -5,10 +5,13 @@ module.exports = {
     uploadFile(file , occassion){
 
         let filePath = null;
+        let maxSize = 0;
 
         switch(occassion){
             case 'profile-picture':
-                filePath = `./uploads/profile-pictures/${file.name}`;
+                filePath = `./uploads/profile-pictures/${file.filename}`;
+                // allow only 1mb in kb
+                maxSize = 1024;
                 break;
             case 'cover-picture':
                 allowedExtensions = ['jpg' , 'jpeg' , 'png'];
@@ -35,17 +38,35 @@ module.exports = {
 
         return new Promise((resolve , reject) => {
             try{
-                let filepath = '/uploads/propic/' + file.filenam
-                fstream = fs.createWriteStream(process.cwd() + '/uploads/propic/' + file.filename);
-                file.pipe(fstream);
-                fstream.on('close', function () {
-                    resolve(filePath);
-                });
+                let err = false;
+                // check if file size is valid
+                if(file.size > maxSize){
+                    reject('File size exceeded');
+                    err = true;
+                }
+
+
+                if(!err){
+                    let filePath = '/propic/' + file.filename
+
+                    fstream = fs.createWriteStream(process.cwd() + '/uploads/propic/' + file.filename);
+                    file.pipe(fstream);
+
+                    fstream.on('close', function () {
+                        resolve(filePath);
+                    });
+                }
+                
             }catch(err){
                 reject(err);
             }
 
         });
+    },
+
+
+    deleteOldFile(){
+        return
     }
    
 };
