@@ -72,7 +72,6 @@ router.post('/register' , async (req ,res) => {
 
 });
 
-
 router.post('/login' , async (req , res) => {
 
     const validator = Joi.object({
@@ -135,7 +134,6 @@ router.post('/login' , async (req , res) => {
     }
 
 });
-
 
 router.get('/current-user' , AuthRequired() , async (req , res) => {
 
