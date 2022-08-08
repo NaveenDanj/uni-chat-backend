@@ -4,14 +4,19 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const db = require('./Database');
 const busboy = require('connect-busboy');
-var path = require('path');
+const path = require('path');
 const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const io = require('socket.io')(server , {
+    cors: {
+      origin: '*',
+    }
+});
 
 require('dotenv').config();
 
 
 const Api = require('./routes/api');
+const onConnection = require('./Routes/socket');
 
 app.use(busboy());
 
@@ -21,6 +26,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(express.static(path.join(__dirname, 'uploads')));
+
 
 // initialize database tables in sequelize
 db.sequelize.sync()
@@ -34,6 +40,11 @@ db.sequelize.sync()
 
 // initialize api routes
 app.use('/api/v1', Api);
+
+
+// initialize socket.io connection
+io.on("connection", onConnection);
+
 
 let PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
