@@ -16,7 +16,7 @@ require('dotenv').config();
 
 
 const Api = require('./routes/api');
-const onConnection = require('./Routes/socket');
+const {onConnection} = require('./Routes/socket')(io);
 
 app.use(busboy());
 
