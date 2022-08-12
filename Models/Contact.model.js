@@ -28,6 +28,12 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: false
         },
 
+        is_favorite: {
+            type: Sequelize.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
+        }
+
     });
 
     return Contact;
