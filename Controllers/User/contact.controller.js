@@ -80,4 +80,38 @@ router.post('/create', async (req , res) => {
 
 });
 
+
+router.get('/get_current_user_contact' , async (req , res) => {
+
+    try{
+
+        // get current user contacts and get user data using relations
+        let contacts = await db.contacts.findAll({
+            where: {
+                user_id: req.user.user.id
+            },
+            // get user data using relations without password
+            include: [{
+                model: db.users,
+                attributes: {
+                    exclude: ['password']
+                }
+            }]
+        });
+        
+        return res.status(200).json({
+            message: 'Contacts fetched',
+            contacts: contacts
+        });
+
+    }catch(err){
+
+        return res.status(400).json({
+            error: err.message
+        });
+    }
+
+});
+
+
 module.exports = router;

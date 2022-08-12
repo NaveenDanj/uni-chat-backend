@@ -20,12 +20,15 @@ db.access_tokens = require("../Models/AccessToken.model")(sequelize, Sequelize);
 db.channels = require("../Models/Channel.model")(sequelize, Sequelize);
 db.channel_users = require("../Models/ChannelUser.model")(sequelize, Sequelize);
 db.contacts = require("../Models/Contact.model")(sequelize, Sequelize);
-// db.access_token = require("../Models/AccessToken.model")(sequelize, Sequelize);
-// db.workspaces = require("../Models/Workspace.model")(sequelize, Sequelize);
-// db.workspace_users = require("../Models/WorkspaceUser.model")(sequelize, Sequelize);
-// db.instance = require("../Models/Instance.model")(sequelize, Sequelize);
-// db.backup = require("../Models/Backup.model")(sequelize, Sequelize);
-// db.app = require("../Models/App.model")(sequelize, Sequelize);
-// db.app_users = require("../Models/AppUser.model")(sequelize, Sequelize);
-// db.error_log = require("../Models/ErrorLog.model")(sequelize, Sequelize);
+
+
+db.users.hasMany(db.contacts, {
+    foreignKey: 'contact_id'
+});
+
+db.contacts.belongsTo(db.users, {
+    foreignKey: 'contact_id',
+    targetKey: 'id'
+});
+
 module.exports = db;

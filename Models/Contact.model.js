@@ -9,12 +9,12 @@ module.exports = (sequelize, Sequelize) => {
 
         user_id: {
             type: Sequelize.INTEGER,
-            allowNull: false
+            allowNull: false,
         },
 
         contact_id: {
             type: Sequelize.INTEGER,
-            allowNull: false
+            allowNull: false,
         },
 
         contact_name : {
@@ -29,5 +29,6 @@ module.exports = (sequelize, Sequelize) => {
         },
 
     });
+
     return Contact;
 };
