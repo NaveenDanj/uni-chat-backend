@@ -8,12 +8,12 @@ const ChannelController = require('../Controllers/Channel/channel.controller');
 const ContactController = require('../Controllers/User/contact.controller');
 
 router.get('/', (req, res) => {
-    res.json('UNI-CHAT API');
+    return res.json('UNI-CHAT API');
 });
 
 router.use('/auth' , AuthController);
 router.use('/user' , UserController);
-router.use('/channel' , AuthRequired , ChannelController);
-router.use('/contact' , AuthRequired , ContactController);
+router.use('/channel' , AuthRequired() , ChannelController);
+router.use('/contact' , AuthRequired() , ContactController);
 
 module.exports = router;

@@ -29,8 +29,8 @@ router.post('/create', async (req , res) => {
         // check if contact already exists
         let checkContact = await db.contacts.findOne({
             where: {
-                userId: req.user.user.id,
-                contactId: data.contactId
+                user_id: req.user.user.id,
+                contact_id: checkUser.id
             }
         });
 
@@ -38,12 +38,16 @@ router.post('/create', async (req , res) => {
             return res.status(400).json({error: 'Contact already exists'});
         }
 
+        // check if contact is user himself
+        if(req.user.user.userId == data.contactId){
+            return res.status(400).json({error: 'You can not add yourself as contact'});
+        }
 
         // check if user is in contact's block list
         let checkBlock = await db.contacts.findOne({
             where: {
-                userId: data.contactId,
-                contactId: req.user.user.id,
+                user_id: checkUser.id,
+                contact_id: req.user.user.id,
                 blocked: true
             }
         });
@@ -55,15 +59,22 @@ router.post('/create', async (req , res) => {
         // create contact
         let contact = await db.contacts.create({
             user_id: req.user.user.id,
-            contact_id: data.contactId,
+            contact_id: checkUser.id,
             contact_name: data.contactName
         });
 
-        return res.status(200).json({message: 'Contact created'});
+        return res.status(200).json({
+            message: 'Contact created',
+            contact: contact
+        });
 
 
     }catch(err){
-        return res.status(400).json({error: err.message});
+
+        return res.status(400).json({
+            error: err.message
+        });
+
     }
 
 
