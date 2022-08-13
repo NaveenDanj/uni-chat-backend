@@ -2,8 +2,9 @@ const express = require('express');
 const db = require("../../Database");
 const router = express.Router();
 const Joi = require('../../Config/validater.config');
+const CheckAccessToMessages = require('../Middlewares/CheckAccessToMessage.middleware');
 
-router.get('/get_user_messages' , async (req , res) => {
+router.get('/get_user_messages' , CheckAccessToMessages() , async (req , res) => {
     
     const contact_id = req.query.contact_id;
     const room_id = req.query.room_id;
