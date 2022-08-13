@@ -66,7 +66,8 @@ module.exports = (sequelize, Sequelize) => {
             validate: {
                 len: [0, 1024]
             },
-            allowNull: true
+            allowNull: true,
+            defaultValue: '/propic/default.png'
         },
 
     });
