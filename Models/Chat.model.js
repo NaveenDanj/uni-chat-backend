@@ -26,6 +26,15 @@ module.exports = (sequelize, Sequelize) => {
             },
         },
 
+        send_to : {
+            type: Sequelize.STRING,
+            allowNull: false,
+            validate: {
+                isIn: [['private', 'group']]
+            },
+            defaultValue: 'private'
+        },
+
         message: {
             type: Sequelize.STRING,
             allowNull: false,
@@ -36,13 +45,6 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             defaultValue: false
         },
-
-        created_at: {
-            type: Sequelize.DATE,
-            allowNull: false,
-            defaultValue: Sequelize.fn('now')
-        }
-
 
     });
 

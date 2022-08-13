@@ -1,13 +1,6 @@
+const db = require('../Database');
 
 module.exports = function(io){
-
-    const sendToMainChannel = function(payload){
-        const socket = this;
-        let _payload = payload;
-        _payload.id = Date.now()+'' + socket.id;
-
-        socket.broadcast.to('main-lobby').emit('channel:main:receiveMessage' , _payload);
-    }
 
     const joinPrivateConversation = function(contact){
         const socket = this;
@@ -26,8 +19,31 @@ module.exports = function(io){
         
     }
 
-    const sendPrivateMessage = function(payload){
+    const sendPrivateMessage = async function(payload){
+        
         const socket = this;
+
+        let message_object = {
+            message: payload.message,
+            user_from: payload.user_from,
+            user_to: payload.user_to,
+            date : new Date(),
+            room_id: payload.room_id
+        }
+        
+        let msg = await db.chat.create({
+            from_user_id: payload.user_from.id,
+            to_user_id: payload.user_to.id,
+            message_type : 'text',
+            send_to: 'private',
+            message : payload.message,
+            is_read: false,
+        });
+
+        message_object.id = msg.id;
+
+        socket.broadcast.to(payload.room_id).emit('private:receiveMessage' , message_object);
+
     }
 
     return {
