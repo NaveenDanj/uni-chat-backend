@@ -32,6 +32,11 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.BOOLEAN,
             allowNull: false,
             defaultValue: false
+        },
+
+        room_id: {
+            type: Sequelize.STRING,
+            allowNull: false,
         }
 
     });

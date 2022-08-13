@@ -60,7 +60,8 @@ router.post('/create', async (req , res) => {
         let contact = await db.contacts.create({
             user_id: req.user.user.id,
             contact_id: checkUser.id,
-            contact_name: data.contactName
+            contact_name: data.contactName,
+            room_id: req.user.user.id > checkUser.id ? req.user.user.id+'' + "-" + checkUser.id+'' : checkUser.id+'' + '-' + req.user.user.id
         });
 
         return res.status(200).json({
