@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const AuthRequired = require('../Middlewares/AuthRequired.middleware');
-const CheckAccessToMessages = require('../Middlewares/CheckAccessToMessage.middleware');
 
 const AuthController = require('../Controllers/Auth/auth.controller');
 const UserController = require('../Controllers/User/user.controller');

@@ -23,6 +23,8 @@ module.exports = function(io){
         
         const socket = this;
 
+        console.log("the data is : " , payload)
+
         let message_object = {
             message: payload.message,
             user_from: payload.user_from,
@@ -33,7 +35,7 @@ module.exports = function(io){
         
         let msg = await db.chat.create({
             from_user_id: payload.user_from.id,
-            to_user_id: payload.user_to.id,
+            to_user_id: payload.user_to.user.id,
             message_type : 'text',
             send_to: 'private',
             message : payload.message,

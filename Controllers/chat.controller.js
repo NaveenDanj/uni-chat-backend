@@ -1,7 +1,7 @@
 const express = require('express');
-const db = require("../../Database");
+const db = require("../Database");
 const router = express.Router();
-const Joi = require('../../Config/validater.config');
+const Joi = require('../Config/validater.config');
 const CheckAccessToMessages = require('../Middlewares/CheckAccessToMessage.middleware');
 
 router.get('/get_user_messages' , CheckAccessToMessages() , async (req , res) => {
@@ -23,14 +23,13 @@ router.get('/get_user_messages' , CheckAccessToMessages() , async (req , res) =>
                 [db.Sequelize.Op.or]: [
                     {
                         from_user_id: contact_id,
-                        to_user_id: req.user.id,
+                        to_user_id: req.user.user.id,
                     },
                     {
-                        from_user_id: req.user.id,
+                        from_user_id: req.user.user.id,
                         to_user_id: contact_id
                     }
                 ],
-                room_id: room_id
             },
             order: [
                 ['id', 'DESC']
@@ -38,9 +37,35 @@ router.get('/get_user_messages' , CheckAccessToMessages() , async (req , res) =>
             offset: offset,
             limit: limit
         });
+
+        // get the count of all messages
+        const count = await db.chat.count({
+            where: {
+                [db.Sequelize.Op.or]: [
+                    {
+                        from_user_id: contact_id,
+                        to_user_id: req.user.user.id,
+                    },
+                    {
+                        from_user_id: req.user.user.id,
+                        to_user_id: contact_id
+                    }
+                ],
+            },
+            order: [
+                ['id', 'DESC']
+            ],
+            offset: offset,
+            limit: limit
+        });
+
     
         return res.json({
-            messages: messages
+            messages: messages,
+            page : page,
+            limit : limit,
+            offset : offset,
+            total : count
         });
 
     }catch(err){
