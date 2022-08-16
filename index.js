@@ -15,7 +15,7 @@ const io = require('socket.io')(server , {
 require('dotenv').config();
 
 
-const Api = require('./routes/api');
+const Api = require('./Routes/api');
 const {onConnection} = require('./Routes/socket')(io);
 
 app.use(busboy());
