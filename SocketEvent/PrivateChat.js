@@ -23,8 +23,6 @@ module.exports = function(io){
         
         const socket = this;
 
-        console.log("the data is : " , payload)
-
         let message_object = {
             message: payload.message,
             user_from: payload.user_from,

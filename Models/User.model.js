@@ -70,6 +70,12 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: '/propic/default.png'
         },
 
+        is_online : {
+            type: Sequelize.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
+        }
+
     });
     return User;
 };

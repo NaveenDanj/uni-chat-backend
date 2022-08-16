@@ -9,7 +9,7 @@ router.get('/get_user_messages' , CheckAccessToMessages() , async (req , res) =>
     const contact_id = req.query.contact_id;
     const room_id = req.query.room_id;
     const page = req.query.page || 1;
-    const limit = 15;
+    const limit = 20;
     const offset = (page - 1) * limit;
 
     if (!contact_id || !room_id) {
