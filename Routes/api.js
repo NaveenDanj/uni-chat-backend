@@ -10,7 +10,7 @@ const ContactController = require('../Controllers/User/contact.controller');
 const ChatController = require('../Controllers/chat.controller');
 
 router.get('/', (req, res) => {
-    return res.json('UNI-CHAT API');
+    return res.json('UNI-CHAT API changed!');
 });
 
 router.use('/auth' , AuthController);
