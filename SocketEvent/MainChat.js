@@ -1,4 +1,3 @@
-let SocketUserMap = {};
 
 const db = require('../Database/index')
 
@@ -15,19 +14,6 @@ module.exports = function(io){
         socket.emit('channel:main:meJoined' , {
             message: 'joined to main channel!',
         });
-
-        SocketUserMap[payload.id] = {
-            socketId : socket.id,
-            userData : payload
-        }
-
-        // update user status as online
-        // let updateValues = { name: 'changed name' };
-        // models.Model.update(updateValues, { where: { id: 1 } }).then((result) => {
-        //     // here your result is simply an array with number of affected rows
-        //     console.log(result);
-        //     // [ 1 ]
-        // });
 
         await db.users.update({
             is_online : true
@@ -49,8 +35,6 @@ module.exports = function(io){
                 message: 'a user has left the main channel!',
                 userId : socket.data.user.id
             });
-
-            delete SocketUserMap[socket.data.user.id]
 
             await db.users.update({
                 is_online : false
