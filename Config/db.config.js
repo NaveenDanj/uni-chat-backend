@@ -1,7 +1,7 @@
 module.exports = {
     HOST: "localhost",
     USER: "root",
-    PASSWORD: "",
+    PASSWORD: process.env.MYSQL_PASSWORD,
     DB: "unichat",
     dialect: "mysql",
     pool: {
