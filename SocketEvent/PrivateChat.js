@@ -46,9 +46,37 @@ module.exports = function(io){
 
     }
 
+    const readPrivateMessage = async function(payload){
+        const socket = this;
+        
+        let messages = payload.messages;
+        let room = payload.room_id;
+        let from = payload.from;
+        let to = payload.to;
+
+        // update the messages to read
+        for(let i = 0; i < messages.length; i++){
+
+            let message = messages[i];
+
+            await db.chat.update({
+                is_read: true
+            } , {
+                where : {
+                    id : message.id
+                }
+            });
+
+        }
+
+        socket.broadcast.to(payload.room_id).emit('private:readReceipt' , message_object);
+
+    }
+
     return {
         joinPrivateConversation,
-        sendPrivateMessage
+        sendPrivateMessage,
+        readPrivateMessage
     }
 
 
