@@ -32,6 +32,7 @@ module.exports = function(io){
         }
         
         let msg = await db.chat.create({
+            private_id : payload.private_id,
             from_user_id: payload.user_from.id,
             to_user_id: payload.user_to.user.id,
             message_type : 'text',
@@ -41,7 +42,7 @@ module.exports = function(io){
         });
 
         message_object.id = msg.id;
-
+        message_object.private_id = msg.private_id
         socket.broadcast.to(payload.room_id).emit('private:receiveMessage' , message_object);
 
     }
@@ -50,26 +51,33 @@ module.exports = function(io){
         const socket = this;
         
         let messages = payload.messages;
-        let room = payload.room_id;
-        let from = payload.from;
-        let to = payload.to;
 
         // update the messages to read
         for(let i = 0; i < messages.length; i++){
 
             let message = messages[i];
 
-            await db.chat.update({
-                is_read: true
-            } , {
+            // check if this message is already read
+            let msg = await db.chat.findOne({
                 where : {
-                    id : message.id
+                    private_id : message
                 }
             });
+            
+            if(msg){
+
+                await db.chat.update({
+                    is_read: true
+                } , {
+                    where : {
+                        private_id : message
+                    }
+                });
+            }
 
         }
 
-        socket.broadcast.to(payload.room_id).emit('private:readReceipt' , message_object);
+        socket.broadcast.to(payload.room_id).emit('private:readReceipt' , payload.messages);
 
     }
 
