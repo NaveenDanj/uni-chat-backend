@@ -3,13 +3,10 @@ const fs = require('fs');
 module.exports = {
 
     uploadFile(file , occassion){
-
-        let filePath = null;
         let maxSize = 0;
 
         switch(occassion){
             case 'profile-picture':
-                filePath = `./uploads/profile-pictures/${file.filename}`;
                 // allow only 1mb in kb
                 maxSize = 1024;
                 break;
@@ -22,19 +19,13 @@ module.exports = {
             case 'post-video':
                 allowedExtensions = ['mp4' , 'mkv' , 'avi'];
                 break;
+            case 'post-file':
+                maxSize = 1024 * 25;
+                allowedExtensions = ['*'];
             default:
                 allowedExtensions = ['jpg' , 'jpeg' , 'png'];
                 break;
         }
-
-        // return new Promise((resolve , reject) => {
-        //     file.mv(filePath , (err) => {
-        //         if(err){
-        //             reject(err);
-        //         }
-        //         resolve(filePath);
-        //     });
-        // });
 
         return new Promise((resolve , reject) => {
             try{
@@ -47,14 +38,32 @@ module.exports = {
 
 
                 if(!err){
-                    let filePath = '/propic/' + file.filename
 
-                    fstream = fs.createWriteStream(process.cwd() + '/uploads/propic/' + file.filename);
-                    file.pipe(fstream);
+                    
+                    if(occassion == 'post-file'){
 
-                    fstream.on('close', function () {
-                        resolve(filePath);
-                    });
+                        let filePath = '/files/' + file.filename
+    
+                        fstream = fs.createWriteStream(process.cwd() + '/uploads/files/' + file.filename);
+                        file.pipe(fstream);
+    
+                        fstream.on('close', function () {
+                            resolve(filePath);
+                        });
+
+                    }else if(occassion == 'profile-picture'){
+
+                        let filePath = '/propic/' + file.filename
+    
+                        fstream = fs.createWriteStream(process.cwd() + '/uploads/propic/' + file.filename);
+                        file.pipe(fstream);
+    
+                        fstream.on('close', function () {
+                            resolve(filePath);
+                        });
+                    }
+
+
                 }
                 
             }catch(err){

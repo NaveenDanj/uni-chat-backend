@@ -3,6 +3,10 @@ const db = require("../Database");
 const router = express.Router();
 const Joi = require('../Config/validater.config');
 const CheckAccessToMessages = require('../Middlewares/CheckAccessToMessage.middleware');
+const {checkAllowedExtension , generateFileName} = require('../Services/filevalidity.service');
+const {uploadFile} = require('../Services/fileuploader.service');
+
+
 
 router.get('/get_user_messages' , CheckAccessToMessages() , async (req , res) => {
     
@@ -79,5 +83,50 @@ router.get('/get_user_messages' , CheckAccessToMessages() , async (req , res) =>
     
 
 });
+
+
+router.post('/upload-file' , async (req , res) => {
+
+    if(!req.busboy){
+        return res.status(400).json({error: 'No file uploaded'});
+    }
+
+    req.pipe(req.busboy);
+
+    req.busboy.on('file', async function (fieldname, file, filename) {
+
+        if (!file){
+            return res.status(400).json({error: 'No file uploaded'});
+        }
+
+        // check if file is valid
+        let isValid = checkAllowedExtension(filename , 'post-file');
+    
+        if(!isValid){
+            return res.status(400).json({error: 'Invalid file extension'});
+        }
+
+        // generate a unique name for the file
+        let fileName = generateFileName(filename);
+        file.filename = fileName;
+        file.size = req.headers['content-length'] / 1024;
+
+        // move the file to the uploads folder
+        let filePath = await uploadFile(file , 'post-file');
+
+        // update the user profile picture
+        // let user = await db.users.update({
+        //     profile_image: filePath
+        // } , {
+        //     where: {
+        //         id: req.user.user.id
+        //     }
+        // });
+
+
+    });
+
+});
+
 
 module.exports = router;

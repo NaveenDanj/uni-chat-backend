@@ -19,12 +19,19 @@ module.exports = {
             case 'post-video':
                 allowedExtensions = ['mp4' , 'mkv' , 'avi'];
                 break;
+            case 'post-file':
+                allowedExtensions = ['*'];
+                break;
             default:
                 allowedExtensions = ['jpg' , 'jpeg' , 'png'];
                 break;
         }
 
         let fileExtension = file.filename.split('.').pop();
+
+        if(allowedExtensions[0] == '*'){
+            return true;
+        }
 
         if(allowedExtensions.includes(fileExtension)){
             return true;
