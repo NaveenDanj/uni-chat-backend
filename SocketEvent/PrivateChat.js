@@ -28,14 +28,15 @@ module.exports = function(io){
             user_from: payload.user_from,
             user_to: payload.user_to,
             date : new Date(),
-            room_id: payload.room_id
+            room_id: payload.room_id,
+            message_type : payload.message_type
         }
         
         let msg = await db.chat.create({
             private_id : payload.private_id,
             from_user_id: payload.user_from.id,
             to_user_id: payload.user_to.user.id,
-            message_type : 'text',
+            message_type : payload.message_type,
             send_to: 'private',
             message : payload.message,
             is_read: false,

@@ -49,7 +49,7 @@ module.exports = {
 
     getFileType(file){
 
-        let fileExtension = file.filename.split('.').pop();
+        let fileExtension = file.split('.').pop();
 
         if(['jpg' , 'jpeg' , 'png'].includes(fileExtension)){
             return 'image';

@@ -5,7 +5,7 @@ const Joi = require('../Config/validater.config');
 const CheckAccessToMessages = require('../Middlewares/CheckAccessToMessage.middleware');
 const {checkAllowedExtension , generateFileName , getFileType} = require('../Services/filevalidity.service');
 const {uploadFile} = require('../Services/fileuploader.service');
-
+require('dotenv').config()
 
 router.get('/get_user_messages' , CheckAccessToMessages() , async (req , res) => {
     
@@ -108,7 +108,7 @@ router.post('/upload-file' , async (req , res) => {
         try{
 
             // generate a unique name for the file
-            let original_filename = file.filename;
+            let original_filename = filename.filename;
             let fileName = generateFileName(filename);
             file.filename = fileName;
             file.size = req.headers['content-length'] / 1024;
@@ -120,10 +120,10 @@ router.post('/upload-file' , async (req , res) => {
                 user_id: req.user.user.id,
                 file_original_name: original_filename,
                 file_name: fileName,
-                file_path: filePath,
-                file_type : getFileType(filename),
+                file_path: process.env.HOST_NAME + filePath,
+                file_type : getFileType(fileName),
                 file_size: file.size,
-                file_extension : filename.split('.').pop()
+                file_extension : fileName.split('.').pop()
             });
 
             return res.json({
