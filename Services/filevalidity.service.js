@@ -45,6 +45,20 @@ module.exports = {
     generateFileName(file){
         let fileExtension = file.filename.split('.').pop();
         return Uuid.v4() + '.' + fileExtension;
+    },
+
+    getFileType(file){
+
+        let fileExtension = file.filename.split('.').pop();
+
+        if(['jpg' , 'jpeg' , 'png'].includes(fileExtension)){
+            return 'image';
+        }else if(['mp4' , 'mkv' , 'avi'].includes(fileExtension)){
+            return 'video';
+        }else{
+            return 'file';
+        }
+
     }
 
 

@@ -3,9 +3,8 @@ const db = require("../Database");
 const router = express.Router();
 const Joi = require('../Config/validater.config');
 const CheckAccessToMessages = require('../Middlewares/CheckAccessToMessage.middleware');
-const {checkAllowedExtension , generateFileName} = require('../Services/filevalidity.service');
+const {checkAllowedExtension , generateFileName , getFileType} = require('../Services/filevalidity.service');
 const {uploadFile} = require('../Services/fileuploader.service');
-
 
 
 router.get('/get_user_messages' , CheckAccessToMessages() , async (req , res) => {
@@ -106,23 +105,38 @@ router.post('/upload-file' , async (req , res) => {
             return res.status(400).json({error: 'Invalid file extension'});
         }
 
-        // generate a unique name for the file
-        let fileName = generateFileName(filename);
-        file.filename = fileName;
-        file.size = req.headers['content-length'] / 1024;
+        try{
 
-        // move the file to the uploads folder
-        let filePath = await uploadFile(file , 'post-file');
+            // generate a unique name for the file
+            let original_filename = file.filename;
+            let fileName = generateFileName(filename);
+            file.filename = fileName;
+            file.size = req.headers['content-length'] / 1024;
 
-        // update the user profile picture
-        // let user = await db.users.update({
-        //     profile_image: filePath
-        // } , {
-        //     where: {
-        //         id: req.user.user.id
-        //     }
-        // });
+            // move the file to the uploads folder
+            let filePath = await uploadFile(file , 'post-file');
 
+            let uploaded_file = await db.uploaded_files.create({
+                user_id: req.user.user.id,
+                file_original_name: original_filename,
+                file_name: fileName,
+                file_path: filePath,
+                file_type : getFileType(filename),
+                file_size: file.size,
+                file_extension : filename.split('.').pop()
+            });
+
+            return res.json({
+                file: uploaded_file
+            });
+
+        }catch(err){
+
+            return res.status(500).json({
+                error: err.message
+            });
+
+        }
 
     });
 

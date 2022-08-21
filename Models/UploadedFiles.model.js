@@ -7,6 +7,11 @@ module.exports = (sequelize, Sequelize) => {
             autoIncrement: true
         },
 
+        user_id : {
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+
         file_name: {
             type: Sequelize.STRING,
             allowNull: false,
@@ -38,8 +43,6 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false
         },
-
-        
 
     });
     return UploadedFiles;
