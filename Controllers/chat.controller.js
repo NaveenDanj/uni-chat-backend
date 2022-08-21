@@ -132,7 +132,7 @@ router.post('/upload-file' , async (req , res) => {
 
         }catch(err){
 
-            return res.status(500).json({
+            return res.status(400).json({
                 error: err.message
             });
 
