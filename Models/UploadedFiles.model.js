@@ -12,6 +12,11 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         },
 
+        to_id : {
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+
         file_name: {
             type: Sequelize.STRING,
             allowNull: false,

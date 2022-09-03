@@ -90,6 +90,10 @@ router.post('/upload-file' , async (req , res) => {
         return res.status(400).json({error: 'No file uploaded'});
     }
 
+    if(!req.query.to_user){
+        return res.status(400).json({error: 'Bad Request'});
+    }
+
     req.pipe(req.busboy);
 
     req.busboy.on('file', async function (fieldname, file, filename) {
@@ -107,6 +111,17 @@ router.post('/upload-file' , async (req , res) => {
 
         try{
 
+            // check if user exists
+            let check_user = await db.users.findOne({
+                where : {
+                    id : req.query.to_user
+                }
+            });
+
+            if(!check_user){
+                return res.status(404).json({error: 'User not found'});
+            }
+
             // generate a unique name for the file
             let original_filename = filename.filename;
             let fileName = generateFileName(filename);
@@ -118,6 +133,7 @@ router.post('/upload-file' , async (req , res) => {
 
             let uploaded_file = await db.uploaded_files.create({
                 user_id: req.user.user.id,
+                to_id : req.query.to_user,
                 file_original_name: original_filename,
                 file_name: fileName,
                 file_path: process.env.HOST_NAME + filePath,
@@ -139,6 +155,98 @@ router.post('/upload-file' , async (req , res) => {
         }
 
     });
+
+});
+
+router.get('/get-user-media' , async (req , res) => {
+
+    const page = +req.query.page || 1;
+    const limit = +req.query.limit || 3;
+    const offset = (page - 1) * limit;
+    const type = req.query.type || 'all';
+
+    try{
+
+        
+        if(type == 'all'){
+
+            const files = await db.uploaded_files.findAll({
+                where: {
+                    user_id: req.user.user.id,
+    
+                },
+                order: [
+                    ['id', 'DESC']
+                ],
+                offset: offset,
+                limit: limit
+            });
+    
+            // get the count of all files
+            const count = await db.uploaded_files.count({
+                where: {
+                    user_id: req.user.user.id,
+                },
+                order: [
+                    ['id', 'DESC']
+                ],
+                offset: offset,
+                limit: limit
+            });
+    
+        
+            return res.json({
+                files: files,
+                page : page,
+                limit : limit,
+                offset : offset,
+                total : count
+            });
+
+        }
+
+        const files = await db.uploaded_files.findAll({
+            where: {
+                user_id: req.user.user.id,
+                file_type : type
+
+            },
+            order: [
+                ['id', 'DESC']
+            ],
+            offset: offset,
+            limit: limit
+        });
+
+        // get the count of all files
+        const count = await db.uploaded_files.count({
+            where: {
+                user_id: req.user.user.id,
+                file_type : type
+            },
+            order: [
+                ['id', 'DESC']
+            ],
+            offset: offset,
+            limit: limit
+        });
+
+    
+        return res.json({
+            files: files,
+            page : page,
+            limit : limit,
+            offset : offset,
+            total : count
+        });
+
+    }catch(err){
+
+        return res.status(500).json({
+            error: err.message
+        });
+
+    }
 
 });
 
