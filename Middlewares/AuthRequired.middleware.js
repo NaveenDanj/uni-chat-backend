@@ -8,7 +8,7 @@ const AuthRequired = () => {
         const token = req.headers['authorization'];
         
         if(!token){
-            return res.status(401).send({error: 'Unauthenticated'});
+            return res.status(401).send({error: 'Unauthenticated 1'});
         }
 
         try{

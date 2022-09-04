@@ -221,7 +221,9 @@ router.delete('/remove_from_favourite' , async (req , res) => {
 
 });
 
-router.delete('/delete' , async (req , res) => {
+router.post('/delete' , async (req , res) => {
+
+    console.log('delete handled!');
 
     // validation object
     const validator = Joi.object({

@@ -57,13 +57,12 @@ router.post('/upload-profile-picture' ,  AuthRequired() , async (req ,res) => {
                 let oldPropic = propic_user.profile_image;
                 let oldPropicPath = path.join(process.cwd()  , '/uploads/' + oldPropic);
                 
-                if(fs.existsSync(oldPropicPath)){
+                if(fs.existsSync(oldPropicPath) && propic_user.profile_image != '/propic/default.png'){
                     fs.unlinkSync(oldPropicPath);
                 }
 
             }
             
-
             // move the file to the uploads folder
             let filePath = await uploadFile(file , 'profile-picture');
 
