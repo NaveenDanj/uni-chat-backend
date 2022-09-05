@@ -4,7 +4,38 @@ const router = express.Router();
 const Joi = require('../Config/validater.config');
 
 router.get('/' , async(req , res) => {
+
+    const page = req.query.page || 1;
+    const limit = 20;
+    const offset = (page - 1) * limit;
     
+    try{
+
+        // get current user contacts and get user data using relations
+        let bookmarks = await db.bookmarks.findAll({
+            where: {
+                user_id: req.user.user.id
+            },
+            order: [
+                ['id', 'DESC']
+            ],
+            offset: offset,
+            limit: limit
+        });
+        
+        return res.status(200).json({
+            message: 'Contacts fetched',
+            contacts: bookmarks
+        });
+
+    }catch(err){
+
+        return res.status(400).json({
+            error: err.message
+        });
+    }
+
+
 });
 
 router.post('/add' , async(req , res) => {
