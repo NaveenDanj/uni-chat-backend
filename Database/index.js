@@ -24,6 +24,7 @@ db.channel_users = require("../Models/ChannelUser.model")(sequelize, Sequelize);
 db.contacts = require("../Models/Contact.model")(sequelize, Sequelize);
 db.chat = require("../Models/Chat.model")(sequelize, Sequelize);
 db.uploaded_files = require("../Models/UploadedFiles.model")(sequelize, Sequelize);
+db.bookmarks = require('../Models/Bookmark.model')(sequelize, Sequelize);
 
 db.users.hasMany(db.contacts, {
     foreignKey: 'contact_id'
