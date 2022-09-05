@@ -81,6 +81,62 @@ router.post('/create', async (req , res) => {
 
 });
 
+router.put('/update' , async(req , res) => {
+
+    // validation object
+    const validator = Joi.object({
+        contactId: Joi.string().required(),
+        contactName : Joi.string().required(),
+    });
+
+    try{
+
+        let data = await validator.validateAsync(req.body , {abortEarly: false});
+
+
+        // check if contact already exists
+        let checkContact = await db.contacts.findOne({
+            where: {
+                user_id: req.user.user.id,
+                contact_id: data.contactId
+            }
+        });
+
+        if(!checkContact){
+            return res.status(400).json({error: 'Contact not found'});
+        }
+
+        // check if contact is user himself
+        if(req.user.user.userId == data.contactId){
+            return res.status(400).json({error: 'You can not add yourself as contact'});
+        }
+
+        // update contact
+        let contact = await db.contacts.update({
+            contact_name : data.contactName
+        } , {
+            where : {
+                contact_id : data.contactId
+            }
+        });
+
+
+        return res.status(200).json({
+            message: 'Contact updated successfully',
+            contact: contact
+        });
+
+
+    }catch(err){
+
+        return res.status(400).json({
+            error: err.message
+        });
+
+    }
+
+});
+
 router.get('/get_current_user_contact' , async (req , res) => {
 
     try{
