@@ -2,6 +2,9 @@ const express = require('express');
 const db = require("../Database");
 const router = express.Router();
 const Joi = require('../Config/validater.config');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op
+
 
 router.get('/' , async(req , res) => {
 
@@ -24,8 +27,8 @@ router.get('/' , async(req , res) => {
         });
         
         return res.status(200).json({
-            message: 'Contacts fetched',
-            contacts: bookmarks
+            message: 'Bookmarks fetched',
+            bookmarks: bookmarks
         });
 
     }catch(err){
@@ -132,6 +135,43 @@ router.post('/remove' , async(req , res) => {
             error: err.message
         });
     }
+
+});
+
+router.get('/search' , async(req , res) => {
+
+    const query = req.query.query;
+    const limit = 20;
+
+    try{
+
+        // get current user contacts and get user data using relations
+        let bookmarks = await db.bookmarks.findAll({
+            where: {
+                user_id: req.user.user.id,
+                name: {
+                    [Op.message]: `%${query}%`
+                }
+
+            },
+            order: [
+                ['id', 'DESC']
+            ],
+            limit: limit
+        });
+        
+        return res.status(200).json({
+            message: 'Bookmarks fetched',
+            bookmarks: bookmarks
+        });
+
+    }catch(err){
+
+        return res.status(400).json({
+            error: err.message
+        });
+    }
+
 
 });
 
