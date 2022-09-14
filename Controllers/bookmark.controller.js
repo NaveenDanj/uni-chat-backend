@@ -149,8 +149,8 @@ router.get('/search' , async(req , res) => {
         let bookmarks = await db.bookmarks.findAll({
             where: {
                 user_id: req.user.user.id,
-                name: {
-                    [Op.message]: `%${query}%`
+                message: {
+                    [Op.like]: `%${query}%`
                 }
 
             },
