@@ -92,4 +92,44 @@ router.post('/upload-profile-picture' ,  AuthRequired() , async (req ,res) => {
 
 });
 
+router.post('/edit-profile' , AuthRequired() , async(req , res) => {
+
+    // validation object
+    const validator = Joi.object({
+        profileName: Joi.string().required(),
+        designation : Joi.string().required(),
+        description : Joi.string().required(),
+        location : Joi.string().required(),
+    });
+
+    try{
+
+        let data = await validator.validateAsync(req.body , {abortEarly: false});
+
+        let user = await db.users.update({
+            fullname : data.profileName,
+            designation : data.designation,
+            about : data.description,
+            location : data.location
+        } , {
+            where : {
+                id: req.user.user.id
+            }
+        });
+
+        return res.status(200).json({
+            message: 'User updated successfully',
+            user: user
+        });
+
+    }catch(err){
+
+        return res.status(400).json({
+            error: err.message
+        });
+
+    }
+
+});
+
 module.exports = router;
