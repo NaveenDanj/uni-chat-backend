@@ -74,6 +74,24 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.BOOLEAN,
             allowNull: false,
             defaultValue: false
+        },
+
+        showOnline : {
+            type: Sequelize.BOOLEAN,
+            allowNull: false,
+            defaultValue: true
+        },
+
+        profile_image_public : {
+            type: Sequelize.BOOLEAN,
+            allowNull: false,
+            defaultValue: true
+        },
+
+        read_receipt : {
+            type: Sequelize.BOOLEAN,
+            allowNull: false,
+            defaultValue: true
         }
 
     });

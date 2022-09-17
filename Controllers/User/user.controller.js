@@ -132,4 +132,40 @@ router.post('/edit-profile' , AuthRequired() , async(req , res) => {
 
 });
 
+router.get('/update-profile-photo-privacy' , AuthRequired() , async(req , res) => {
+
+    let validator = Joi.object({
+        status: Joi.string().valid(...['Public','Private']),
+    });
+
+
+    try{
+
+        let data = await validator.validateAsync(req.body , {abortEarly: false});
+
+        // update status
+        await db.users.update({
+            profile_image_public : data.status == 'Public' ? true : false,
+        } , {
+            where : {
+                id: req.user.user.id
+            }
+        });
+
+        return res.status(200).json({
+            message : "Privacy settings updated successfully."
+        });
+        
+
+    }catch(err){
+
+        return res.status(400).json({
+            error: err.message
+        });
+
+    }
+
+
+});
+
 module.exports = router;
