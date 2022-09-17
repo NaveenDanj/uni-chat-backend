@@ -132,7 +132,7 @@ router.post('/edit-profile' , AuthRequired() , async(req , res) => {
 
 });
 
-router.get('/update-profile-photo-privacy' , AuthRequired() , async(req , res) => {
+router.post('/update-profile-photo-privacy' , AuthRequired() , async(req , res) => {
 
     let validator = Joi.object({
         status: Joi.string().valid(...['Public','Private']),
@@ -168,7 +168,7 @@ router.get('/update-profile-photo-privacy' , AuthRequired() , async(req , res) =
 
 });
 
-router.get('/update-online-privacy' , AuthRequired() , async(req , res) => {
+router.post('/update-show-online-privacy' , AuthRequired() , async(req , res) => {
 
     let validator = Joi.object({
         status: Joi.boolean()
@@ -204,7 +204,7 @@ router.get('/update-online-privacy' , AuthRequired() , async(req , res) => {
 
 });
 
-router.get('/update-read-receipt-privacy' , AuthRequired() , async(req , res) => {
+router.post('/update-read-receipt-privacy' , AuthRequired() , async(req , res) => {
 
     let validator = Joi.object({
         status: Joi.boolean()
