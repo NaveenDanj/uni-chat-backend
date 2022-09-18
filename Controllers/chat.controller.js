@@ -5,6 +5,10 @@ const Joi = require('../Config/validater.config');
 const CheckAccessToMessages = require('../Middlewares/CheckAccessToMessage.middleware');
 const {checkAllowedExtension , generateFileName , getFileType} = require('../Services/filevalidity.service');
 const {uploadFile} = require('../Services/fileuploader.service');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
+
 require('dotenv').config()
 
 router.get('/get_user_messages' , CheckAccessToMessages() , async (req , res) => {
@@ -250,5 +254,73 @@ router.get('/get-user-media' , async (req , res) => {
 
 });
 
+
+router.get('/search-chat' , CheckAccessToMessages() , async(req , res) => {
+
+    const contact_id = req.query.contact_id;
+    const room_id = req.query.room_id;
+    const limit = 20;
+    let query =  req.query.query;
+
+    if (!query){
+        res.status(400).json({
+            message : "Bad request. Empty query"
+        })
+    }
+
+    if (!contact_id || !room_id) {
+        return res.status(400).send({ error: 'Invalid request' });
+    }
+
+
+    try{
+
+        // const messages = await db.chat.findAll({
+        //     where: {
+
+        //         [db.Sequelize.and] : {
+                    
+        //             // {
+        //                 [db.Sequelize.Op.like]: [
+        //                     { message: req.params.query } 
+        //                 ],
+        //             // },
+
+
+        //             [db.Sequelize.Op.or]: [
+        //                 {
+        //                     from_user_id: contact_id,
+        //                     to_user_id: req.user.user.id,
+        //                 },
+        //                 {
+        //                     from_user_id: req.user.user.id,
+        //                     to_user_id: contact_id
+        //                 }
+        //             ],
+
+
+        //         },
+
+        //     },
+
+        //     limit: limit
+        // });
+
+        const [messages, metadata] = await db.sequelize.query(`SELECT * FROM chats WHERE message like '%${req.query.query}%' AND (  (from_user_id = '${contact_id}' AND to_user_id = '${req.user.user.id}') OR  (from_user_id = '${req.user.user.id}' AND to_user_id = '${contact_id}')   )  LIMIT ${limit} `);
+
+        return res.json({
+            messages: messages,
+        });
+
+    }catch(err){
+
+        return res.status(500).json({
+            error: err.message
+        });
+
+    }
+
+
+});
 
 module.exports = router;
