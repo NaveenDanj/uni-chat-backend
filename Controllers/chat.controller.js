@@ -306,7 +306,7 @@ router.get('/search-chat' , CheckAccessToMessages() , async(req , res) => {
         //     limit: limit
         // });
 
-        const [messages, metadata] = await db.sequelize.query(`SELECT * FROM chats WHERE message like '%${req.query.query}%' AND (  (from_user_id = '${contact_id}' AND to_user_id = '${req.user.user.id}') OR  (from_user_id = '${req.user.user.id}' AND to_user_id = '${contact_id}')   )  LIMIT ${limit} `);
+        const [messages, metadata] = await db.sequelize.query(`SELECT * FROM chats WHERE message like '%${req.query.query}%' AND (  (from_user_id = '${contact_id}' AND to_user_id = '${req.user.user.id}') OR  (from_user_id = '${req.user.user.id}' AND to_user_id = '${contact_id}')   )  LIMIT ${limit}`);
 
         return res.json({
             messages: messages,
